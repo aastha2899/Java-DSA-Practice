@@ -1,0 +1,65 @@
+package Arrays1;
+
+public class java1 {
+    public class LeetCode160 {
+
+        static class ListNode {
+            int val;
+            ListNode next;
+
+            ListNode(int val) {
+                this.val = val;
+                this.next = null;
+            }
+        }
+
+        public static ListNode getIntersectionNode(ListNode headA, ListNode headB) {
+
+            ListNode p1 = headA;
+            ListNode p2 = headB;
+
+            while (p1 != p2) {
+
+                if (p1 == null) {
+                    p1 = headB;
+                } else {
+                    p1 = p1.next;
+                }
+
+                if (p2 == null) {
+                    p2 = headA;
+                } else {
+                    p2 = p2.next;
+                }
+            }
+
+            return p1;
+        }
+
+        public static void main(String[] args) {
+
+            // Common part
+            ListNode common = new ListNode(7);
+            common.next = new ListNode(8);
+
+            // List A
+            ListNode headA = new ListNode(1);
+            headA.next = new ListNode(2);
+            headA.next.next = new ListNode(3);
+            headA.next.next.next = common;
+
+            // List B
+            ListNode headB = new ListNode(4);
+            headB.next = new ListNode(5);
+            headB.next.next = common;
+
+            ListNode ans = getIntersectionNode(headA, headB);
+
+            if (ans != null) {
+                System.out.println("Intersection Node: " + ans.val);
+            } else {
+                System.out.println("No intersection");
+            }
+        }
+    }
+}
