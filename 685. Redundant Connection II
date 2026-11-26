@@ -1,0 +1,74 @@
+
+class Solution {
+    int[] parent;
+
+    public int[] findRedundantDirectedConnection(int[][] edges) {
+        int n = edges.length;
+
+        int[] candidate1 = null;
+        int[] candidate2 = null;
+
+        int[] incoming = new int[n + 1];
+
+        // Step 1: Check if a node has two parents
+        for (int[] edge : edges) {
+            int u = edge[0];
+            int v = edge[1];
+
+            if (incoming[v] == 0) {
+                incoming[v] = u;
+            } else {
+                candidate1 = new int[]{incoming[v], v};
+                candidate2 = edge;
+                break;
+            }
+        }
+
+        // Step 2: Initialize Union-Find
+        parent = new int[n + 1];
+
+        for (int i = 1; i <= n; i++) {
+            parent[i] = i;
+        }
+
+        // Step 3: Check cycle
+        for (int[] edge : edges) {
+
+            // Skip the second parent edge temporarily
+            if (candidate2 != null &&
+                edge[0] == candidate2[0] &&
+                edge[1] == candidate2[1]) {
+                continue;
+            }
+
+            int u = edge[0];
+            int v = edge[1];
+
+            int pu = find(u);
+            int pv = find(v);
+
+            if (pu == pv) {
+                // Cycle exists
+                if (candidate1 == null) {
+                    return edge;
+                } else {
+                    return candidate1;
+                }
+            }
+
+            parent[pu] = pv;
+        }
+
+        // No cycle after skipping candidate2
+        return candidate2;
+    }
+
+    int find(int x) {
+        if (parent[x] == x) {
+            return x;
+        }
+
+        parent[x] = find(parent[x]);
+        return parent[x];
+    }
+}
